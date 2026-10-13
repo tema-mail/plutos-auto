@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import legal from '../data/legal.json';
+import { url } from '../data/site';
+---
+<Base title="Согласие Пользователя на обработку персональных данных – Plutos Auto" description="Согласие Пользователя на обработку персональных данных ООО «Плутос»." solidHeader>
+  <section class="page-head">
+    <div class="wrap">
+      <a class="caps eyebrow" href={url()} style="display:inline-block">← На главную</a>
+      <h1 class="title" style="max-width:20em">Согласие Пользователя на обработку персональных данных</h1>
+    </div>
+  </section>
+  <section class="section section--tight">
+    <div class="wrap"><article class="legal" set:html={legal.agree} /></div>
+  </section>
+</Base>

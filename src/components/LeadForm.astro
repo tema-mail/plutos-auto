@@ -1,0 +1,19 @@
+---
+// Короткая заявка «имя + телефон (+ пожелания)». Без приёмника (PUBLIC_LEAD_ENDPOINT) уходит в WhatsApp
+// готовым сообщением – обработчик общий, в Base.astro.
+import { url } from '../data/site';
+interface Props { submit?: string; wish?: boolean; source: string; dark?: boolean }
+const { submit = 'Отправить заявку', wish = true, source, dark = false } = Astro.props;
+---
+<form class="form" data-lead-form data-source={source} novalidate>
+  <label class="field"><span class="sr">Ваше имя</span><input name="name" autocomplete="name" placeholder="Ваше имя" required maxlength="60" /></label>
+  <label class="field"><span class="sr">Телефон</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required /></label>
+  {wish && <label class="field"><span class="sr">Дополнительные пожелания</span><textarea name="wish" rows="3" maxlength="600" placeholder="Дополнительные пожелания"></textarea></label>}
+  <input type="hidden" name="car" />
+  <label class="consent">
+    <input type="checkbox" name="consent" required />
+    <span>Я согласен с <a href={url('policy/')} target="_blank">политикой конфиденциальности</a></span>
+  </label>
+  <p class="form-error" data-form-error hidden></p>
+  <button type="submit" class:list={['btn', 'btn--block', dark ? '' : 'btn--gold']}>{submit}</button>
+</form>

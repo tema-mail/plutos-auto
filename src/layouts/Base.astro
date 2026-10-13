@@ -1,0 +1,189 @@
+---
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
+import Contacts from '../components/Contacts.astro';
+import { img, nav, site, url } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** шапка сразу с фоном (страницы без тёмного первого экрана) */
+  solidHeader?: boolean;
+}
+const { title, description, solidHeader = false } = Astro.props;
+const noindex = import.meta.env.PUBLIC_NOINDEX === '1';
+const endpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? '';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const isHome = Astro.url.pathname.replace(/\/$/, '') === import.meta.env.BASE_URL.replace(/\/$/, '');
+// на внутренних страницах пункты меню ведут на якоря главной
+const navHref = (h: string) => (isHome ? h : url(h));
+const social = [
+  { name: 'instagram', href: site.instagram, label: 'Instagram*' },
+  { name: 'telegram', href: site.telegram, label: 'Telegram' },
+  { name: 'whatsapp', href: site.whatsapp, label: 'WhatsApp' },
+] as const;
+const socialAll = [...social, { name: 'youtube', href: site.youtube, label: 'YouTube' }, { name: 'vk', href: site.vk, label: 'ВКонтакте' }, { name: 'facebook', href: site.facebook, label: 'Facebook*' }] as const;
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#09090a" />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Unbounded:wght@200;300;400&display=swap" />
+  </head>
+  <body>
+    <header class:list={['header', { 'header--solid': solidHeader }]} data-header>
+      <div class="wrap">
+        <div class="header__top">
+          <a class="header__logo" href={url()} aria-label="Plutos Auto – на главную">
+            <img src={img('logo-gold.svg')} alt="Plutos Auto" width="128" height="34" />
+            <span class="header__tag">{site.tagline}</span>
+          </a>
+          <a class="header__place" href={site.map} target="_blank" rel="noopener"><Icon name="pin" />{site.address}</a>
+          <div class="header__social">
+            {social.map((s) => <a class="icon-btn" href={s.href} target="_blank" rel="noopener" aria-label={s.label}><Icon name={s.name} /></a>)}
+            <a class="icon-btn" href={site.phones[0].href} aria-label="Позвонить"><Icon name="phone" /></a>
+          </div>
+          <button type="button" class="btn header__call" data-lead="">Звонок в удобное время</button>
+          <div class="header__right">
+            <a class="icon-btn" href={site.phones[0].href} aria-label="Позвонить"><Icon name="phone" /></a>
+            <a class="icon-btn" href={site.whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp"><Icon name="whatsapp" /></a>
+            <button class="icon-btn header__burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="site-nav" data-burger><Icon name="menu" /></button>
+          </div>
+        </div>
+        <nav class="header__nav" id="site-nav" aria-label="Основное меню">
+          {nav.map((n) => <a href={navHref(n.href)}>{n.label}</a>)}
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+      <Contacts />
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <nav class="footer__nav" aria-label="Меню в подвале">{nav.map((n) => <a href={navHref(n.href)}>{n.label}</a>)}</nav>
+        <div class="footer__mid">
+          <div class="footer__brand">
+            <img src={img('logo-white.svg')} alt="Plutos Auto" width="120" height="32" loading="lazy" />
+            <p>{site.tagline}</p>
+          </div>
+          <div class="footer__social">
+            {socialAll.map((s) => <a class="icon-btn" href={s.href} target="_blank" rel="noopener" aria-label={s.label}><Icon name={s.name} /></a>)}
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <div class="footer__links">
+            <a href={site.contract} target="_blank" rel="noopener">Типовой договор поставки</a>
+            <a href={url('policy/')}>Политика конфиденциальности</a>
+            <a href={url('agree/')}>Пользовательское соглашение</a>
+          </div>
+          <a class="footer__dev" href="https://deford-studio.ru/" target="_blank" rel="noopener">Design by Deford</a>
+          <p class="footer__note">*Признан экстремистской организацией и запрещен на территории РФ. © {new Date().getFullYear()} Plutos Auto</p>
+        </div>
+      </div>
+    </footer>
+
+    <dialog class="modal" id="lead-modal" aria-labelledby="lead-title" data-endpoint={endpoint} data-whatsapp={site.whatsapp}>
+      <button type="button" class="modal__close" data-close aria-label="Закрыть"><Icon name="close" /></button>
+      <div class="modal__inner">
+        <div data-lead-body>
+          <h2 class="modal__title" id="lead-title">Заполните форму</h2>
+          <p class="modal__car" data-lead-car hidden></p>
+          <p class="modal__text">Наш менеджер свяжется с вами в ближайшее время и предложит оптимальное решение в соответствии с вашими предпочтениями.</p>
+          <LeadForm source="Окно «Заполните форму»" submit="Отправить" wish={false} />
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      const header = document.querySelector<HTMLElement>('[data-header]');
+      const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+      const onScroll = () => header?.classList.toggle('is-solid', window.scrollY > 40);
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      burger?.addEventListener('click', () => {
+        const open = header?.classList.toggle('is-open') ?? false;
+        burger.setAttribute('aria-expanded', String(open));
+      });
+      header?.querySelectorAll('.header__nav a').forEach((a) => a.addEventListener('click', () => header.classList.remove('is-open')));
+
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add('is-in'), io.unobserve(e.target))),
+        { rootMargin: '0px 0px -8% 0px' },
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // ── окно заявки: любая кнопка с data-lead, значение – название машины ──
+      const modal = document.querySelector<HTMLDialogElement>('#lead-modal')!;
+      const carNote = modal.querySelector<HTMLElement>('[data-lead-car]')!;
+      document.addEventListener('click', (e) => {
+        const trigger = (e.target as HTMLElement).closest<HTMLElement>('[data-lead]');
+        if (!trigger) return;
+        e.preventDefault();
+        const car = trigger.dataset.lead ?? '';
+        carNote.hidden = !car;
+        carNote.textContent = car;
+        modal.querySelector<HTMLInputElement>('input[name="car"]')!.value = car;
+        modal.showModal();
+      });
+      modal.querySelector('[data-close]')?.addEventListener('click', () => modal.close());
+      modal.addEventListener('click', (e) => e.target === modal && modal.close());
+
+      // ── отправка любой формы заявки: приёмник, иначе готовое сообщение в WhatsApp ──
+      const endpoint = modal.dataset.endpoint ?? '';
+      const whatsapp = modal.dataset.whatsapp ?? '';
+      const phoneOk = (v: string) => v.replace(/\D/g, '').length >= 10;
+
+      document.addEventListener('submit', async (e) => {
+        const form = (e.target as HTMLElement).closest<HTMLFormElement>('[data-lead-form]');
+        if (!form) return;
+        e.preventDefault();
+        const err = form.querySelector<HTMLElement>('[data-form-error]');
+        const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+        const fail = (msg: string) => { if (err) { err.textContent = msg; err.hidden = false; } };
+        if (!data.name?.trim()) return fail('Как к вам обращаться?');
+        if (!phoneOk(data.phone ?? '')) return fail('Проверьте номер телефона');
+        if (!data.consent) return fail('Нужно согласие с политикой конфиденциальности');
+        if (err) err.hidden = true;
+
+        const lines = [`Заявка с сайта Plutos Auto (${form.dataset.source ?? 'форма'})`, `Имя: ${data.name}`, `Телефон: ${data.phone}`];
+        const skip = new Set(['name', 'phone', 'consent']);
+        for (const [k, v] of Object.entries(data)) if (!skip.has(k) && v.trim()) lines.push(`${form.querySelector(`[name="${k}"]`)?.getAttribute('data-label') ?? k}: ${v}`);
+        const text = lines.join('\n');
+
+        let sent = false;
+        if (endpoint) {
+          try {
+            const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, source: form.dataset.source, text }) });
+            sent = r.ok;
+          } catch { sent = false; }
+        }
+        const done = document.createElement('div');
+        done.className = 'form-done';
+        if (sent) {
+          done.innerHTML = '<p class="caps eyebrow">Заявка отправлена</p><p>Менеджер свяжется с вами в ближайшее время.</p>';
+        } else {
+          const wa = `${whatsapp}?text=${encodeURIComponent(text)}`;
+          done.innerHTML = `<p class="caps eyebrow">Остался один шаг</p><p class="muted">Отправьте заявку менеджеру в WhatsApp – сообщение уже заполнено.</p><a class="btn btn--gold btn--block" style="margin-top:18px" target="_blank" rel="noopener" href="${wa}">Отправить в WhatsApp</a>`;
+          window.open(wa, '_blank', 'noopener');
+        }
+        form.replaceWith(done);
+      });
+    </script>
+  </body>
+</html>

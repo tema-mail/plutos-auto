@@ -1,0 +1,58 @@
+---
+// Контакты на тёмной карте (Leaflet + тайлы OpenStreetMap, затемнены фильтром в global.css – CARTO Dark теперь только с ключом). Метка – логотип Plutos в золотом круге
+// точно на офисе (координаты организации из Яндекс Карт). Кнопка ведёт в Яндекс Карты.
+import Icon from './Icon.astro';
+import { img, site } from '../data/site';
+---
+<section class="section" id="contacts">
+  <div class="wrap">
+    <div class="contacts reveal">
+      <div class="map" data-map data-lat={site.coords[0]} data-lng={site.coords[1]} data-logo={img('logo-white.svg')} aria-label="Карта: офис Plutos Auto"></div>
+      <div class="contacts__card">
+        <h2 class="title">Контакты</h2>
+        <div class="contacts__row">
+          <Icon name="mail" />
+          <div class="contacts__list">{site.emails.map((e) => <a href={`mailto:${e}`}>{e}</a>)}</div>
+        </div>
+        <div class="contacts__row">
+          <Icon name="pin" />
+          <div>
+            <p>{site.city}, {site.address}</p>
+            <a class="contacts__open" href={site.map} target="_blank" rel="noopener">Открыть в Яндекс Картах</a>
+          </div>
+        </div>
+        <div class="contacts__row">
+          <Icon name="phone" />
+          <div class="contacts__list">
+            {site.phones.map((p) => <p><span>{p.dept}:</span> <a href={p.href}>{p.phone}</a> {p.who}</p>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  const el = document.querySelector<HTMLElement>('[data-map]');
+  if (el) {
+    const point: [number, number] = [Number(el.dataset.lat), Number(el.dataset.lng)];
+    const wide = window.matchMedia('(min-width: 761px)').matches;
+    const map = L.map(el, { scrollWheelZoom: false, zoomControl: true, attributionControl: true }).setView(point, 16);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="pin"><div class="pin__ring"><img src="${el.dataset.logo}" alt="Plutos Auto"></div><span class="pin__tail"></span></div>`,
+      iconSize: [74, 84],
+      iconAnchor: [37, 84],
+    });
+    L.marker(point, { icon, title: 'Plutos Auto' }).addTo(map);
+    // на широком экране карточка контактов слева – сдвигаем метку вправо, чтобы её не закрывало
+    if (wide) map.panBy([-Math.min(260, el.clientWidth * 0.22), 0], { animate: false });
+  }
+</script>

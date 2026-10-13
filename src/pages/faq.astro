@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { faq } from '../data/content';
+import { url } from '../data/site';
+---
+<Base title="Ответы на часто задаваемые вопросы – Plutos Auto" description="Кто может подать заявку, что входит в стоимость, сроки и способы доставки автомобилей из Европы." solidHeader>
+  <section class="page-head">
+    <div class="wrap">
+      <a class="caps eyebrow" href={url()} style="display:inline-block">← На главную</a>
+      <h1 class="title">Часто задаваемые <span class="gold">вопросы</span></h1>
+    </div>
+  </section>
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="faq">
+        {faq.map((f, i) => (
+          <details open={i === 0}>
+            <summary>{f.q}<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__a">{f.a.map((p) => <p>{p}</p>)}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

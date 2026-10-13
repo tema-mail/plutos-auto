@@ -1,0 +1,210 @@
+---
+// Главная Plutos Auto: блоки и тексты – как на plutosauto.ru, в том же порядке.
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
+import Quiz from '../components/Quiz.tsx';
+import Cases from '../components/Cases.tsx';
+import { cases, faq, intro, models, nuances, partners, services, steps } from '../data/content';
+import { img, srcset, url } from '../data/site';
+
+const base = url('img/');
+---
+<Base
+  title="Премиальные и люксовые авто из Европы под заказ – Plutos Auto"
+  description="Доставка новых премиальных автомобилей под заказ из Европы: подбор, договор, таможенная очистка и сертификация «под ключ». Москва, Ленинградский проспект, 36 стр. 39."
+>
+  <!-- 1. Первый экран – один кадр -->
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true">
+      <img src={img('cases/x6-m60i-1-1600.webp')} srcset={srcset('cases/x6-m60i-1', [800, 1600])} sizes="100vw" alt="" fetchpriority="high" />
+    </div>
+    <div class="wrap hero__inner">
+      <div>
+        <h1 class="hero__title"><span class="hero__line gold">Премиальные</span> <span class="hero__line">и <span class="gold">люксовые</span> авто</span> <span class="hero__line">из Европы под заказ</span></h1>
+        <p class="hero__sub">Рестайлинг<span>/</span>Конфигуратор опций<span>/</span>Люксовые комплектации</p>
+      </div>
+      <a class="ring" href="#quiz">Подобрать<br />авто</a>
+    </div>
+  </section>
+
+  <!-- 2. Откройте для себя мир эксклюзивных автомобилей -->
+  <section class="section">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="title">Откройте для себя мир эксклюзивных автомобилей <span class="gold">вместе с нами!</span></h2>
+      </div>
+      <div class="duo">
+        {[intro.left, intro.right].map((c) => (
+          <article class="duo__card reveal">
+            <p class="duo__lead">{c.lead} <span class="gold">{c.accent}</span></p>
+            <p class="duo__text">{c.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Модели, которые заказывают чаще всего -->
+  <section class="section section--tight" id="models">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="title">Модели, которые заказывают <span class="gold">чаще всего</span></h2>
+        <p class="subtitle">Оперативный подбор новых авто, под индивидуальный запрос.</p>
+      </div>
+      <div class="product-grid">
+        {models.map((m) => (
+          <article class="model reveal">
+            <div class="model__media">
+              <img src={img(`${m.photo}-800.webp`)} srcset={srcset(m.photo, m.credit ? [800, 1400] : [800, 1600])} sizes="(max-width: 1023px) 50vw, 400px" alt={m.name} loading="lazy" width="800" height="600" />
+              {m.credit && <a class="model__credit" href={m.credit.href} target="_blank" rel="noopener">Фото: {m.credit.author}, {m.credit.license}</a>}
+            </div>
+            <div class="model__body">
+              <h3 class="model__name">{m.name}</h3>
+              <dl class="specs">
+                <div><dt>Объём</dt><dd>{m.volume}</dd></div>
+                <div><dt>Пробег</dt><dd>{m.mileage}</dd></div>
+                <div><dt>Тип топлива</dt><dd>{m.fuel}</dd></div>
+                <div><dt>Мощность</dt><dd>{m.power}</dd></div>
+              </dl>
+              <button type="button" class="btn btn--block" data-lead={m.name}>Связаться с менеджером</button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+    <div class="brands" aria-label="Марки: Audi, BMW, Mercedes-Benz, Porsche, Lexus, Rolls-Royce, MINI, Jaguar, Maserati, Ferrari, Range Rover">
+      <div class="brands__track">
+        <img src={img('brands.webp')} alt="" width="1833" height="123" loading="lazy" />
+        <img src={img('brands.webp')} alt="" width="1833" height="123" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Берем на себя все юридические и технические нюансы -->
+  <section class="section photo-band">
+    <div class="photo-band__bg" aria-hidden="true"><img src={img('bg/nuances-1200.webp')} alt="" loading="lazy" /></div>
+    <div class="wrap split">
+      <h2 class="title reveal">Берем на себя все юридические <span class="gold">и технические нюансы</span></h2>
+      <div class="reveal">
+        {nuances.map((n) => <div class="nuance"><Icon name={n.icon as 'search' | 'doc' | 'key'} />{n.text}</div>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Подберем автомобиль по важным для вас параметрам -->
+  <section class="section" id="quiz">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="title">Подберем автомобиль<br /><span class="gold">по важным для вас параметрам</span></h2>
+      </div>
+      <div class="quiz reveal">
+        <div class="quiz__phone"><img src={img('quiz-phone-800.webp')} alt="Пример подбора в телефоне" loading="lazy" width="400" height="609" /></div>
+        <Quiz client:visible carSrc={img('quiz-car-700.webp')} carSrcset={srcset('quiz-car', [700, 1400])} policyHref={url('policy/')} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Кейсы: 150+ авто уже у владельцев -->
+  <section class="section section--tight" id="cases">
+    <div class="wrap reveal">
+      <Cases client:visible cases={cases} base={base} />
+    </div>
+  </section>
+
+  <!-- 7. Заказать новое авто из Европы «под ключ» легко -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="title">Заказать новое авто из Европы <span class="gold">«под ключ»</span> легко</h2>
+      </div>
+      <ol class="steps reveal" style="list-style:none;margin:0;padding:0">
+        {steps.map((s, i) => (
+          <li class="step" tabindex="0">
+            <span class="step__dot" aria-hidden="true"></span>
+            <span class="step__num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="step__title">{s.title}</h3>
+            <p class="step__text">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 8. Предлагаем привлекательные условия + 9. Совсем скоро вы познакомитесь -->
+  <section class="section photo-band">
+    <div class="photo-band__bg" aria-hidden="true"><img src={img('bg/conditions-1680.webp')} alt="" loading="lazy" /></div>
+    <div class="wrap split">
+      <h2 class="title reveal">Предлагаем привлекательные условия <span class="gold">по стоимости и срокам доставки</span></h2>
+      <div class="form-card reveal"><LeadForm source="Условия по стоимости и срокам" /></div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="title">Совсем скоро вы познакомитесь<br /><span class="gold">с авто вашей мечты</span></h2>
+      </div>
+      <div class="bento reveal">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <div class={n === 1 ? 'bento__big' : 'bento__small'}>
+            <img src={img(`gallery/x5-${n}-${n === 1 ? 1200 : 600}.webp`)} srcset={srcset(`gallery/x5-${n}`, [600, 1200])} sizes={n === 1 ? '(max-width: 760px) 100vw, 640px' : '(max-width: 760px) 50vw, 320px'} alt="BMW X5 – доставлен клиенту" loading="lazy" />
+          </div>
+        ))}
+        <div class="bento__row">
+          {[6, 7, 8, 9].map((n) => (
+            <div><img src={img(`gallery/x5-${n}-600.webp`)} srcset={srcset(`gallery/x5-${n}`, [600, 1200])} sizes="(max-width: 760px) 50vw, 320px" alt="BMW X5 – детали" loading="lazy" /></div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Наши услуги -->
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="head reveal"><h2 class="title">Наши <span class="gold">услуги</span></h2></div>
+      <div class="services">
+        {services.map((s, i) => (
+          <article class="service reveal">
+            <p class="service__n">{String(i + 1).padStart(2, '0')}</p>
+            <h3 class="service__title">{s.title}</h3>
+            <p class="service__text">{s.text}</p>
+          </article>
+        ))}
+        <div class="services__form reveal">
+          <h3>Персональный менеджер ответит на все вопросы</h3>
+          <LeadForm source="Персональный менеджер" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Партнёры -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="head reveal"><h2 class="title">Партнёры</h2></div>
+      <div class="partners reveal">
+        {partners.map((p, i) => (
+          <div class="partner"><img src={img(`partners/${String(i + 1).padStart(2, '0')}-480.webp`)} alt={p} loading="lazy" /></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. Часто задаваемые вопросы -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="head reveal"><h2 class="title">Часто задаваемые <span class="gold">вопросы</span></h2></div>
+      <div class="faq reveal">
+        {faq.map((f) => (
+          <details>
+            <summary>{f.q}<span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__a">{f.a.map((p) => <p>{p}</p>)}</div>
+          </details>
+        ))}
+      </div>
+      <div class="faq__more"><a class="btn" href={url('faq/')}>Все вопросы</a></div>
+    </div>
+  </section>
+</Base>
