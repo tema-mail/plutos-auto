@@ -40,7 +40,8 @@ import { img, site } from '../data/site';
   if (el) {
     const point: [number, number] = [Number(el.dataset.lat), Number(el.dataset.lng)];
     const wide = window.matchMedia('(min-width: 761px)').matches;
-    const map = L.map(el, { scrollWheelZoom: false, zoomControl: true, attributionControl: true }).setView(point, 16);
+    const map = L.map(el, { scrollWheelZoom: false, zoomControl: false, attributionControl: true }).setView(point, 16);
+    L.control.zoom({ position: 'topright' }).addTo(map); // слева карточка контактов
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
