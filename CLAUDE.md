@@ -14,14 +14,14 @@
 - Astro 7 + Preact (острова `Quiz`, `Cases`), Leaflet для карты (тайлы OSM, затемнены CSS-фильтром). `npm run build`, `npm run dev`.
 - Ссылки и картинки – только через `url()`/`img()`/`srcset()` из `src/data/site.ts` (подпапка Pages).
 - Тексты – `src/data/content.ts`; юридические страницы – `src/data/legal.json` (сняты с /policy и /agree).
-- Фото: `python3 scripts/photos.py <папка tild*-исходников с Тильды> <папка с фото Wikimedia>` → `public/img/**.webp`. Исходники не в репо.
+- Фото: `python3 scripts/photos.py <папка tild*-исходников с Тильды>` → `public/img/**.webp`. Исходники Тильды не в репо.
 - Заявки: `PUBLIC_LEAD_ENDPOINT` (POST JSON). Не задан – готовое сообщение в WhatsApp +375 44 515-88-47 (номер с сайта).
 
 ## Правила
 - Только короткое тире «–». Номера на фото скрыты (у Plutos – уже на исходниках).
 - Карточки моделей: на телефоне 2 в ряд, с 1024 px – 3.
-- Фото Cayenne, 911, G63, Range Rover – Wikimedia Commons (CC BY / CC BY-SA, подпись автора на карточке). Заменить на свои фото Plutos, когда пришлют.
+- Фото Cayenne, 911, G63, Range Rover – кадры Community Dealer (решение владельца 14.10.2026, стиль как у X5 M и V-класса Plutos). Только для показа: на боевой сайт Plutos – их собственные фото.
 
 ## Открыто
-- Своих фото Plutos для 4 карточек нет (Telegram без превью, ключа Scrape Creators на маке нет).
+- Своих фото Plutos для 4 карточек нет (Telegram без превью, ключа Scrape Creators на маке нет) – стоят кадры Community.
 - Приёмник заявок не выбран; на Тильде заявки шли в её CRM.

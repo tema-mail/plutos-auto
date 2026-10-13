@@ -1,12 +1,14 @@
-"""Фото сайта из снятых с plutosauto.ru и Wikimedia исходников → public/img/**.webp.
+"""Фото сайта: снятые с plutosauto.ru исходники и кадры Community Dealer → public/img/**.webp.
 
-Запуск: python3 scripts/photos.py <папка с исходниками tild*_*.{jpeg,png}> <папка wikimedia>
+Запуск: python3 scripts/photos.py <папка с исходниками tild*_*.{jpeg,png}> [папка img/cars Community Dealer]
 Из нескольких копий одного кадра (Тильда хранит превью и оригинал) берётся самая крупная.
 """
 import glob, os, re, sys
 from PIL import Image
 
-SRC, WM = sys.argv[1], sys.argv[2]
+import shutil
+SRC = sys.argv[1]
+CD_CARS = sys.argv[2] if len(sys.argv) > 2 else os.path.expanduser('~/Sites/community-dealer/public/img/cars')
 OUT = os.path.join(os.path.dirname(__file__), '..', 'public', 'img')
 
 def biggest(name, only=None):
@@ -68,11 +70,14 @@ PARTNERS = ['Mask_group_1.png', 'Mask_group_2.png', 'Mask_group_4.png', 'Mask_gr
 for i, n in enumerate(PARTNERS, 1):
     save(biggest(n), f'partners/{i:02d}', widths=(480,), quality=90)
 
-# карточки «Модели, которые заказывают чаще всего»: Wikimedia (лицензии – в src/data/cars.ts)
-for name, dest, crop in [
-    ('cayenne.jpg', 'models/cayenne', None),
-    ('911.jpg', 'models/911', None),
-    ('g63.jpg', 'models/g63', None),
-    ('rr.jpg', 'models/range-rover', None),
+# карточки «Модели, которые заказывают чаще всего»: своих кадров Cayenne, 911, G63 и Range Rover у Plutos нет.
+# По решению владельца (14.10.2026) – фото Community Dealer (та же съёмка у ВТБ Арены, номера уже размыты).
+# Только для показной копии: на боевой сайт Plutos чужие машины не ставить.
+for car_id, dest in [
+    ('1133174586', 'models/cayenne'),      # Porsche Cayenne GTS, чёрный
+    ('1132699816', 'models/911'),          # Porsche 911 Turbo S, зелёный
+    ('1134016411', 'models/g63'),          # Mercedes-AMG G 63, чёрный
+    ('1134281777', 'models/range-rover'),  # Range Rover Autobiography, чёрный
 ]:
-    save(os.path.join(WM, name), dest, widths=(800, 1400), crop=crop)
+    for w in (800, 1200):
+        shutil.copyfile(os.path.join(CD_CARS, car_id, f'01-{w}.webp'), os.path.join(OUT, f'{dest}-{w}.webp'))

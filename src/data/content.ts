@@ -17,8 +17,6 @@ export const intro = {
 export interface Model {
   name: string;
   photo: string;
-  /** откуда фото, если не своё (Wikimedia Commons, свободная лицензия) */
-  credit?: { author: string; license: string; href: string };
   volume: string;
   mileage: string;
   fuel: string;
@@ -26,23 +24,11 @@ export interface Model {
 }
 
 export const models: Model[] = [
-  {
-    name: 'Porsche Cayenne', photo: 'models/cayenne', volume: '3 996 см³', mileage: '600 км', fuel: 'Бензин', power: '474 л.с.',
-    credit: { author: 'OWS Photography', license: 'CC BY 4.0', href: 'https://commons.wikimedia.org/wiki/File:Porsche_Cayenne_(9YA)_Washington_DC_Metro_Area,_USA_(1).jpg' },
-  },
-  {
-    name: 'Porsche 911', photo: 'models/911', volume: '3 745 см³', mileage: '50 км', fuel: 'Бензин', power: '900 л.с.',
-    credit: { author: 'MrWalkr', license: 'CC BY-SA 4.0', href: 'https://commons.wikimedia.org/wiki/File:2023_Porsche_992_GT3_RS_SCD_24.jpg' },
-  },
+  { name: 'Porsche Cayenne', photo: 'models/cayenne', volume: '3 996 см³', mileage: '600 км', fuel: 'Бензин', power: '474 л.с.' },
+  { name: 'Porsche 911', photo: 'models/911', volume: '3 745 см³', mileage: '50 км', fuel: 'Бензин', power: '900 л.с.' },
   { name: 'BMW X5 M Competition', photo: 'cases/x5m-1', volume: '4 395 см³', mileage: '30 048 км', fuel: 'Бензин', power: '625 л.с.' },
-  {
-    name: 'Mercedes-Benz G 63', photo: 'models/g63', volume: '3 982 см³', mileage: '96 500 км', fuel: 'Бензин', power: '585 л.с.',
-    credit: { author: 'Alexander Migl', license: 'CC BY-SA 4.0', href: 'https://commons.wikimedia.org/wiki/File:Mercedes-AMG_G_63_(2018)_IMG_3429.jpg' },
-  },
-  {
-    name: 'Land Rover Range Rover', photo: 'models/range-rover', volume: '2 997 см³', mileage: '29 839 км', fuel: 'Дизель', power: '566 л.с.',
-    credit: { author: 'Damian B Oh', license: 'CC BY-SA 4.0', href: 'https://commons.wikimedia.org/wiki/File:Land_Rover_Range_Rover_Sport_HSE_SDV6_L494_FL_Fuji_White_(4).jpg' },
-  },
+  { name: 'Mercedes-Benz G 63', photo: 'models/g63', volume: '3 982 см³', mileage: '96 500 км', fuel: 'Бензин', power: '585 л.с.' },
+  { name: 'Land Rover Range Rover', photo: 'models/range-rover', volume: '2 997 см³', mileage: '29 839 км', fuel: 'Дизель', power: '566 л.с.' },
   { name: 'Mercedes-Benz V class', photo: 'cases/v300-1', volume: '1 950 см³', mileage: '10 км', fuel: 'Дизель', power: '190 л.с.' },
 ];
 

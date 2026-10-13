@@ -56,8 +56,7 @@ const base = url('img/');
         {models.map((m) => (
           <article class="model reveal">
             <div class="model__media">
-              <img src={img(`${m.photo}-800.webp`)} srcset={srcset(m.photo, m.credit ? [800, 1400] : [800, 1600])} sizes="(max-width: 1023px) 50vw, 400px" alt={m.name} loading="lazy" width="800" height="600" />
-              {m.credit && <a class="model__credit" href={m.credit.href} target="_blank" rel="noopener">Фото: {m.credit.author}, {m.credit.license}</a>}
+              <img src={img(`${m.photo}-800.webp`)} srcset={srcset(m.photo, m.photo.startsWith('models/') ? [800, 1200] : [800, 1600])} sizes="(max-width: 1023px) 50vw, 400px" alt={m.name} loading="lazy" width="800" height="600" />
             </div>
             <div class="model__body">
               <h3 class="model__name">{m.name}</h3>

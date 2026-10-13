@@ -169,7 +169,6 @@ p { margin: 0; }
 .model__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
 .model:hover .model__media img { transform: scale(1.05); }
 .model__media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(19, 19, 21, 0.85) 100%); pointer-events: none; }
-.model__credit { position: absolute; right: 8px; bottom: 6px; z-index: 1; font-size: 9px; color: rgba(255, 255, 255, 0.45); }
 .model__body { display: flex; flex-direction: column; gap: 16px; flex: 1; padding: 18px 22px 22px; }
 .model__name { font: 400 clamp(14px, 1.3vw, 17px)/1.3 var(--f-display); text-transform: uppercase; letter-spacing: 0.02em; }
 .specs { margin: 0; display: grid; gap: 8px; font-size: 13.5px; }
@@ -184,7 +183,6 @@ p { margin: 0; }
   .model .specs div { padding-bottom: 5px; }
   .model .specs div:nth-child(n + 3) { display: none; }
   .model .btn { min-height: 40px; padding: 0 10px; font-size: 9.5px; letter-spacing: 0.08em; }
-  .model__credit { display: none; }
 }
 
 /* бегущая строка марок */
