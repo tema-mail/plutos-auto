@@ -1,6 +1,6 @@
 ---
-// Короткая заявка «имя + телефон (+ пожелания)». Без приёмника (PUBLIC_LEAD_ENDPOINT) показывает готовый текст
-// с кнопкой «Скопировать и открыть Telegram» – обработчик общий, в Base.astro.
+// Короткая заявка «имя + телефон (+ пожелания)». Без приёмника (PUBLIC_LEAD_ENDPOINT) заявка не отправлена: экран предлагает
+// позвонить менеджеру и скопировать текст – обработчик общий, в Base.astro.
 import { url } from '../data/site';
 interface Props { submit?: string; wish?: boolean; source: string; dark?: boolean }
 const { submit = 'Отправить заявку', wish = true, source, dark = false } = Astro.props;

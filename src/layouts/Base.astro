@@ -20,7 +20,7 @@ const isHome = Astro.url.pathname.replace(/\/$/, '') === import.meta.env.BASE_UR
 const navHref = (h: string) => (isHome ? h : url(h));
 const social = [
   { name: 'instagram', href: site.instagram, label: 'Instagram*' },
-  { name: 'telegram', href: site.telegram, label: 'Telegram' },
+  { name: 'telegram', href: site.telegram, label: 'Telegram-группа' },
 ] as const;
 const socialAll = [...social, { name: 'youtube', href: site.youtube, label: 'YouTube' }, { name: 'vk', href: site.vk, label: 'ВКонтакте' }, { name: 'facebook', href: site.facebook, label: 'Facebook*' }] as const;
 ---
@@ -58,7 +58,7 @@ const socialAll = [...social, { name: 'youtube', href: site.youtube, label: 'You
           <button type="button" class="btn header__call" data-lead="">Звонок в удобное время</button>
           <div class="header__right">
             <a class="icon-btn" href={site.phones[0].href} aria-label="Позвонить"><Icon name="phone" /></a>
-            <a class="icon-btn" href={site.telegram} target="_blank" rel="noopener" aria-label="Telegram"><Icon name="telegram" /></a>
+            <a class="icon-btn" href={site.telegram} target="_blank" rel="noopener" aria-label="Telegram-группа"><Icon name="telegram" /></a>
             <button class="icon-btn header__burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="site-nav" data-burger><Icon name="menu" /></button>
           </div>
         </div>
@@ -97,7 +97,7 @@ const socialAll = [...social, { name: 'youtube', href: site.youtube, label: 'You
       </div>
     </footer>
 
-    <dialog class="modal" id="lead-modal" aria-labelledby="lead-title" data-endpoint={endpoint} data-telegram={site.telegram} data-phone={site.phones[0].phone} data-phone-href={site.phones[0].href}>
+    <dialog class="modal" id="lead-modal" aria-labelledby="lead-title" data-endpoint={endpoint} data-phone={site.phones[0].phone} data-phone-href={site.phones[0].href}>
       <button type="button" class="modal__close" data-close aria-label="Закрыть"><Icon name="close" /></button>
       <div class="modal__inner">
         <div data-lead-body>
@@ -143,10 +143,11 @@ const socialAll = [...social, { name: 'youtube', href: site.youtube, label: 'You
       modal.querySelector('[data-close]')?.addEventListener('click', () => modal.close());
       modal.addEventListener('click', (e) => e.target === modal && modal.close());
 
-      // ── отправка любой формы заявки: приёмник, иначе готовый текст и кнопка «Скопировать и открыть Telegram»
-      //    (t.me не принимает текст ссылкой, поэтому копируем в буфер; телефон – запасной путь) ──
+      // ── отправка любой формы заявки: приёмник. Его нет или он не ответил – заявка НЕ отправлена: честно говорим,
+      //    даём «Позвонить менеджеру» и текст для копирования. В Telegram не вести: t.me/PlutosAuto – открытая группа,
+      //    заявка с телефоном ушла бы всем участникам ──
       const endpoint = modal.dataset.endpoint ?? '';
-      const { telegram = '', phone = '', phoneHref = '' } = modal.dataset;
+      const { phone = '', phoneHref = '' } = modal.dataset;
       const phoneOk = (v: string) => v.replace(/\D/g, '').length >= 10;
 
       document.addEventListener('submit', async (e) => {
@@ -178,18 +179,17 @@ const socialAll = [...social, { name: 'youtube', href: site.youtube, label: 'You
         if (sent) {
           done.innerHTML = '<p class="caps eyebrow">Заявка отправлена</p><p>Менеджер свяжется с вами в ближайшее время.</p>';
         } else {
-          done.innerHTML = `<p class="caps eyebrow">Остался один шаг</p><p class="muted">Отправьте заявку менеджеру в Telegram – текст уже готов.</p><textarea class="form-done__text" rows="6" readonly aria-label="Готовый текст заявки"></textarea><a class="btn btn--gold btn--block" data-copy-tg target="_blank" rel="noopener" href="${telegram}">Скопировать и открыть Telegram</a><p class="muted form-done__note" aria-live="polite">Telegram откроется без текста: вставьте его в чат и отправьте.</p><a class="btn btn--block" href="${phoneHref}">Позвонить: ${phone}</a>`;
+          done.innerHTML = `<p class="caps eyebrow">Заявка ещё не отправлена</p><p class="muted">Мы её пока не получили. Позвоните и продиктуйте заявку – текст ниже.</p><a class="btn btn--gold btn--block" href="${phoneHref}">Позвонить менеджеру</a><p class="muted form-done__note">Отдел продаж: ${phone}</p><textarea class="form-done__text" rows="6" readonly aria-label="Готовый текст заявки"></textarea><button type="button" class="btn btn--block" data-copy-lead>Скопировать текст заявки</button><p class="muted form-done__note" data-copy-note aria-live="polite"></p>`;
           const box = done.querySelector<HTMLTextAreaElement>('textarea')!;
-          const note = done.querySelector<HTMLElement>('.form-done__note')!;
+          const note = done.querySelector<HTMLElement>('[data-copy-note]')!;
           box.value = text; // только через value: в тексте ввод пользователя
-          // ссылка открывается сама (target=_blank), блокировщик окон её не трогает; здесь только копирование
-          done.querySelector('[data-copy-tg]')!.addEventListener('click', () => {
+          done.querySelector('[data-copy-lead]')!.addEventListener('click', () => {
             box.focus();
             box.setSelectionRange(0, box.value.length);
             let copied = false;
             try { copied = document.execCommand('copy'); } catch { /* старый способ недоступен */ }
             const said = (ok: boolean) => {
-              note.textContent = ok ? 'Текст скопирован. Вставьте его в чат Telegram и отправьте.' : 'Не удалось скопировать: выделите текст выше и скопируйте вручную.';
+              note.textContent = ok ? 'Текст скопирован.' : 'Не удалось скопировать: выделите текст выше и скопируйте вручную.';
             };
             if (navigator.clipboard) navigator.clipboard.writeText(box.value).then(() => said(true), () => said(copied));
             else said(copied);
