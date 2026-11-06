@@ -14,7 +14,6 @@ export const site = {
     { dept: 'Бухгалтерия', phone: '+7 925 924 50 94', href: 'tel:+79259245094', who: 'Татьяна' },
   ],
   emails: ['BLR_opt@mail.ru', 'Zhenya-vechorko@yandex.ru'],
-  whatsapp: 'https://wa.me/375445158847',
   telegram: 'https://t.me/PlutosAuto',
   instagram: 'https://www.instagram.com/plutos.auto/',
   youtube: 'https://www.youtube.com/@PlutosAuto',
