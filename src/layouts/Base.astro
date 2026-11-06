@@ -110,6 +110,7 @@ const socialAll = [...social, { name: 'youtube', href: site.youtube, label: 'You
     </dialog>
 
     <script>
+      import { leadFields } from '../lib/attribution';
       const header = document.querySelector<HTMLElement>('[data-header]');
       const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
       const onScroll = () => header?.classList.toggle('is-solid', window.scrollY > 40);
@@ -170,7 +171,7 @@ const socialAll = [...social, { name: 'youtube', href: site.youtube, label: 'You
         let sent = false;
         if (endpoint) {
           try {
-            const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, source: form.dataset.source, text }) });
+            const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, ...leadFields(), source: form.dataset.source, text }) });
             sent = r.ok;
           } catch { sent = false; }
         }
